@@ -13,6 +13,7 @@ struct UserViewModel {
     let username: String
     let role: Role
     let roleText: String
+    var readState: Bool
     
     init(user: User) {
         // Avatar
@@ -24,5 +25,6 @@ struct UserViewModel {
         // Role
         role = user.role
         roleText = user.role.rawValue
+        readState = false
     }
 }

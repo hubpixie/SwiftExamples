@@ -12,6 +12,7 @@ class UserCell: UICollectionViewCell {
     @IBOutlet weak var avatar: UIImageView!
     @IBOutlet weak var username: UILabel!
     @IBOutlet weak var role: UILabel!
+    @IBOutlet weak var readStateLabel: UILabel!
 
     static let defaultAvatar = UIImage(named: "Avatar")
     
@@ -26,6 +27,7 @@ class UserCell: UICollectionViewCell {
         // The avatar property will be assigned asynchronously through an ImageLoadOperation
         username.text = viewModel.username
         role.text = viewModel.roleText
+        readStateLabel.text = viewModel.readState ? "Read!": ""
 
         isUserInteractionEnabled = false  // Cell selection is not required for this sample
     }
