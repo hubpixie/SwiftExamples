@@ -126,7 +126,7 @@ static void mainthreadTimerCallback(CFRunLoopTimerRef timer, void *info)
             double fps = numberOfFrames/updateWatchdogInterval;
             numberOfFrames = 0;
             if (useLogs) {
-                NSLog(@"fps %.2f", fps);
+             //   NSLog(@"fps %.2f", fps);
             }
             [self throwExceptionForStallingIfNeeded];
             dispatch_async(dispatch_get_main_queue(), ^{

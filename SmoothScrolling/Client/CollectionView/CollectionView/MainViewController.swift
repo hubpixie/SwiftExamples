@@ -9,11 +9,16 @@
 import UIKit
 
 class MainViewController: UICollectionViewController {
+    enum ReadStateEnum {
+        case none
+        case reading
+        case read
+    }
     fileprivate static let sectionInsets = UIEdgeInsetsMake(0, 2, 0, 2)
     fileprivate let userViewModelController = UserViewModelController()
     fileprivate var firstLoaded: Bool = true
-    fileprivate var preIndexPathsForVisibleItems: [IndexPath]?
-    fileprivate var totalReadStates: [Bool]?
+    fileprivate var indexPathsForReadStateStack: [IndexPath] = []
+    fileprivate var totalReadStates: [ReadStateEnum] = []
 
     // Pre-Fetching Queue
     fileprivate let imageLoadQueue = OperationQueue()
@@ -46,9 +51,9 @@ class MainViewController: UICollectionViewController {
                 }
             } else {
                 DispatchQueue.main.async {
-                    strongSelf.totalReadStates = Array(repeating: false, count: strongSelf.userViewModelController.viewModelsCount)
+                    strongSelf.totalReadStates = Array(repeating: ReadStateEnum.none, count: strongSelf.userViewModelController.viewModelsCount)
                     strongSelf.collectionView?.reloadData()
-                    strongSelf.preIndexPathsForVisibleItems = []
+                    strongSelf.timer = nil
                 }
             }
         }
@@ -71,8 +76,8 @@ extension MainViewController {
     override func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "UserCell", for: indexPath) as! UserCell
 
-        if var viewModel = userViewModelController.viewModel(at: (indexPath as NSIndexPath).row) {
-            viewModel.readState = (self.totalReadStates?[indexPath.row])!
+        if var viewModel = userViewModelController.viewModel(at: (indexPath as NSIndexPath).item) {
+            viewModel.readState = (self.totalReadStates[indexPath.item] == ReadStateEnum.none ? false: true)
             cell.configure(viewModel)
             if let imageLoadOperation = imageLoadOperations[indexPath],
                 let image = imageLoadOperation.image {
@@ -92,7 +97,7 @@ extension MainViewController {
         }
         
         #if DEBUG_CELL_LIFECYCLE
-        print(String.init(format: "cellForRowAt #%i", indexPath.row))
+        //print(String.init(format: "cellForRowAt #%i", indexPath.row))
         #endif
         
         return cell
@@ -103,10 +108,9 @@ extension MainViewController {
         if self.firstLoaded == false &&  self.navigationController?.isNavigationBarHidden == false {
             self.navigationController?.isNavigationBarHidden = true
         }
-        //print("willDisplay: self.findReadStateOfCollectionView() indexPathsForVisibleItems =\(String(describing: self.collectionView?.indexPathsForVisibleItems))")
-        if (self.collectionView?.indexPathsForVisibleItems.count)! <= indexPath.item + 1  {
+        if (self.collectionView?.indexPathsForVisibleItems.count)! % 2 == 0 {
                 //do something after table is done loading
-            print("findReadStateOfCollectionView.1")
+           // print("findReadStateOfCollectionView.1")
                 self.findReadStateOfCollectionView()
         }
     }
@@ -120,9 +124,8 @@ extension MainViewController {
         }
         imageLoadOperation.cancel()
         imageLoadOperations.removeValue(forKey: indexPath)
-        
         #if DEBUG_CELL_LIFECYCLE
-        print(String.init(format: "didEndDisplaying #%i", indexPath.row))
+        print(String.init(format: "didEndDisplaying #%i", indexPath.item))
         #endif
     }
     
@@ -135,53 +138,69 @@ extension MainViewController {
     
     override func scrollViewDidEndDragging(_ scrollView: UIScrollView,
                                            willDecelerate decelerate: Bool) {
-        print("findReadStateOfCollectionView.2")
         self.findReadStateOfCollectionView()
     }
     
     func findReadStateOfCollectionView() {
-        if self.timer != nil {
+        if self.timer != nil  {
             self.timer.invalidate()
         }
         for indexPath in (self.collectionView?.indexPathsForVisibleItems)! {
-                if !((self.totalReadStates?[indexPath.row])!)  {
-                    self.preIndexPathsForVisibleItems?.append(indexPath)
-                }
+            if self.totalReadStates[indexPath.item] == ReadStateEnum.read {
+                continue
+            }
+            if self.totalReadStates[indexPath.item] == ReadStateEnum.none {
+                self.indexPathsForReadStateStack.append(indexPath)
+            }
         }
         if self.timer == nil || !self.timer.isValid {
             self.timer = Timer.scheduledTimer(timeInterval: 5.0, target: self, selector: #selector(self.drawCellReadState), userInfo: nil, repeats: true)
         }
     }
 
-    func drawCellReadState() {
+    @objc func drawCellReadState() {
         //find be-read cells
-        
-        if (self.preIndexPathsForVisibleItems?.isEmpty)! {
+        if (self.indexPathsForReadStateStack.isEmpty) {
             self.timer.invalidate()
             return
         }
+        guard let offsetPoint: CGPoint = self.collectionView?.contentOffset else {
+            return
+        }
         DispatchQueue.main.async {
-            for i in 0..<(self.totalReadStates?.count)! {
-                if (self.totalReadStates?[i])! {
-                    let ipt: IndexPath = IndexPath(row: i, section: 0)
+            for i in 0..<(self.totalReadStates.count) {
+                if (self.totalReadStates[i] == ReadStateEnum.reading) {
+                    let ipt: IndexPath = IndexPath(item: i, section: 0)
                     guard let cell :UserCell = self.collectionView?.cellForItem(at: ipt) as? UserCell else {
                         continue
                     }
+                    guard let idx = self.indexPathsForReadStateStack.index(of: ipt) else {
+                        continue
+                    }
                     cell.readStateLabel.textColor = UIColor.gray
+                    self.totalReadStates[i] = ReadStateEnum.read
+                    self.indexPathsForReadStateStack.remove(at: idx)
                 }
             }
-            for _ in 0..<(self.preIndexPathsForVisibleItems?.count)!{
-                guard let indexPath: IndexPath = self.preIndexPathsForVisibleItems?.first else {
+            for _ in 0..<self.indexPathsForReadStateStack.count{
+                guard let indexPath: IndexPath = self.indexPathsForReadStateStack.first else {
                     return
                 }
                 guard let cell: UserCell = self.collectionView?.cellForItem(at: indexPath) as? UserCell else {
-                    self.preIndexPathsForVisibleItems?.remove(at: 0)
+                    self.indexPathsForReadStateStack.remove(at: 0)
                     continue
                 }
+
+                if cell.frame.origin.y - offsetPoint.y + cell.frame.size.height / 2 > self.view.bounds.size.height {
+//                    print("drawCellReadState.A==cell height=\(cell.frame.origin.y, cell.frame.size.height, self.view.bounds.size.height), indexPath = \(indexPath)")
+                    self.indexPathsForReadStateStack.remove(at: 0)
+                    continue
+                }
+
                 cell.readStateLabel.text = "Read!"
                 cell.readStateLabel.textColor = UIColor.brown
-                self.totalReadStates?[indexPath.row] = true
-                self.preIndexPathsForVisibleItems?.remove(at: 0)
+                self.totalReadStates[indexPath.item] = ReadStateEnum.reading
+                self.indexPathsForReadStateStack.remove(at: 0)
             }
         }
     }
@@ -190,7 +209,7 @@ extension MainViewController {
 
 extension MainViewController {
     override func scrollViewDidScroll(_ scrollView: UIScrollView) {
-        print("scrollViewDidScroll")
+        //print("scrollViewDidScroll")
     }
     override func scrollViewDidEndScrollingAnimation(_ scrollView: UIScrollView) {
         print("scrollViewDidEndScrollingAnimation")
@@ -226,14 +245,14 @@ extension MainViewController: UICollectionViewDataSourcePrefetching {
             if let _ = imageLoadOperations[indexPath] {
                 return
             }
-            if let viewModel = userViewModelController.viewModel(at: indexPath.row) {
+            if let viewModel = userViewModelController.viewModel(at: indexPath.item) {
                 let imageLoadOperation = ImageLoadOperation(url: viewModel.avatarUrl)
                 imageLoadQueue.addOperation(imageLoadOperation)
                 imageLoadOperations[indexPath] = imageLoadOperation
             }
             
             #if DEBUG_CELL_LIFECYCLE
-            print(String(format: "prefetchItemsAt #%i", indexPath.row))
+           // print(String(format: "prefetchItemsAt #%i", indexPath.item))
             #endif
         }
     }
@@ -247,7 +266,7 @@ extension MainViewController: UICollectionViewDataSourcePrefetching {
             imageLoadOperations.removeValue(forKey: indexPath)
             
             #if DEBUG_CELL_LIFECYCLE
-            //print(String(format: "cancelPrefetchingForItemsAt #%i", indexPath.row))
+            //print(String(format: "cancelPrefetchingForItemsAt #%i", indexPath.item))
             #endif
         }
     }
