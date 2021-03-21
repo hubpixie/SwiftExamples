@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7D0D4C1F25FCA3B9009C42E0 /* Test2ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7D0D4C1E25FCA3B9009C42E0 /* Test2ViewController.swift */; };
+		8CE76EF9A8976379618A574A /* Pods_TaskList.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0A411304F8E398A330E44603 /* Pods_TaskList.framework */; };
 		AF5157831EB93A0800B4EE5B /* Task.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF51577E1EB93A0800B4EE5B /* Task.swift */; };
 		AF5157841EB93A0800B4EE5B /* TaskCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF51577F1EB93A0800B4EE5B /* TaskCell.swift */; };
 		AF5157851EB93A0800B4EE5B /* TaskHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AF5157801EB93A0800B4EE5B /* TaskHeaderView.swift */; };
@@ -21,6 +23,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		0A411304F8E398A330E44603 /* Pods_TaskList.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_TaskList.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		2D48AFAFE7045E1C710F4C55 /* Pods-TaskList.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaskList.release.xcconfig"; path = "Target Support Files/Pods-TaskList/Pods-TaskList.release.xcconfig"; sourceTree = "<group>"; };
+		5ED0CFC5FCCD031BFD51BBB4 /* Pods-TaskList.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-TaskList.debug.xcconfig"; path = "Target Support Files/Pods-TaskList/Pods-TaskList.debug.xcconfig"; sourceTree = "<group>"; };
+		7D0D4C1E25FCA3B9009C42E0 /* Test2ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Test2ViewController.swift; sourceTree = "<group>"; };
 		AF51577E1EB93A0800B4EE5B /* Task.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Task.swift; sourceTree = "<group>"; };
 		AF51577F1EB93A0800B4EE5B /* TaskCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskCell.swift; sourceTree = "<group>"; };
 		AF5157801EB93A0800B4EE5B /* TaskHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TaskHeaderView.swift; sourceTree = "<group>"; };
@@ -41,12 +47,30 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				8CE76EF9A8976379618A574A /* Pods_TaskList.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		0236519BA4BEC0089B9F6903 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				0A411304F8E398A330E44603 /* Pods_TaskList.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		72A2662398BA2529B2670376 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				5ED0CFC5FCCD031BFD51BBB4 /* Pods-TaskList.debug.xcconfig */,
+				2D48AFAFE7045E1C710F4C55 /* Pods-TaskList.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
 		AF51577D1EB93A0800B4EE5B /* Task */ = {
 			isa = PBXGroup;
 			children = (
@@ -64,6 +88,8 @@
 			children = (
 				AF7BA7581EB93963003BFAF9 /* TaskList */,
 				AF7BA7571EB93963003BFAF9 /* Products */,
+				72A2662398BA2529B2670376 /* Pods */,
+				0236519BA4BEC0089B9F6903 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -82,6 +108,7 @@
 				AF7BA7591EB93963003BFAF9 /* AppDelegate.swift */,
 				AF5157881EB93A3300B4EE5B /* TasksDataSource.swift */,
 				AF5157891EB93A3300B4EE5B /* TasksViewController.swift */,
+				7D0D4C1E25FCA3B9009C42E0 /* Test2ViewController.swift */,
 				AF7BA75D1EB93963003BFAF9 /* Main.storyboard */,
 				AF7BA7601EB93963003BFAF9 /* Assets.xcassets */,
 				AF7BA7621EB93963003BFAF9 /* LaunchScreen.storyboard */,
@@ -97,9 +124,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = AF7BA7681EB93963003BFAF9 /* Build configuration list for PBXNativeTarget "TaskList" */;
 			buildPhases = (
+				6E64C3EA2C2444A8A72EE24B /* [CP] Check Pods Manifest.lock */,
 				AF7BA7521EB93963003BFAF9 /* Sources */,
 				AF7BA7531EB93963003BFAF9 /* Frameworks */,
 				AF7BA7541EB93963003BFAF9 /* Resources */,
+				54E93CE6CAB18682B62B30A0 /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -131,6 +160,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
@@ -157,6 +187,53 @@
 		};
 /* End PBXResourcesBuildPhase section */
 
+/* Begin PBXShellScriptBuildPhase section */
+		54E93CE6CAB18682B62B30A0 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-TaskList/Pods-TaskList-frameworks.sh",
+				"${BUILT_PRODUCTS_DIR}/BrightFutures/BrightFutures.framework",
+				"${BUILT_PRODUCTS_DIR}/PromisesObjC/FBLPromises.framework",
+				"${BUILT_PRODUCTS_DIR}/PromisesSwift/Promises.framework",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputPaths = (
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/BrightFutures.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/FBLPromises.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Promises.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-TaskList/Pods-TaskList-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		6E64C3EA2C2444A8A72EE24B /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-TaskList-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
+
 /* Begin PBXSourcesBuildPhase section */
 		AF7BA7521EB93963003BFAF9 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
@@ -169,6 +246,7 @@
 				AF5157851EB93A0800B4EE5B /* TaskHeaderView.swift in Sources */,
 				AF7BA75A1EB93963003BFAF9 /* AppDelegate.swift in Sources */,
 				AF51578A1EB93A3300B4EE5B /* TasksDataSource.swift in Sources */,
+				7D0D4C1F25FCA3B9009C42E0 /* Test2ViewController.swift in Sources */,
 				AF5157861EB93A0800B4EE5B /* TaskHeaderViewModel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -292,25 +370,27 @@
 		};
 		AF7BA7691EB93963003BFAF9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 5ED0CFC5FCCD031BFD51BBB4 /* Pods-TaskList.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = TaskList/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.aprearo.TaskList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Debug;
 		};
 		AF7BA76A1EB93963003BFAF9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 2D48AFAFE7045E1C710F4C55 /* Pods-TaskList.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = TaskList/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.aprearo.TaskList;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 3.0;
+				SWIFT_VERSION = 5.0;
 			};
 			name = Release;
 		};

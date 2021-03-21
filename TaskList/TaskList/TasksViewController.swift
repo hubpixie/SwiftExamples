@@ -7,6 +7,8 @@
 //
 
 import UIKit
+//import Promises
+import Combine
 
 class TasksViewController: UIViewController {
     @IBOutlet weak var groupButton: UIBarButtonItem!
@@ -32,6 +34,33 @@ class TasksViewController: UIViewController {
         groupButton.title = isGrouped ? "Ungroup" : "Group"
         collectionView.reloadData()
     }
+    
+    @IBAction func buttonTapped(_ sender: UIButton)  {
+        if #available(iOS 13.0, *) {
+            let vc = Test2ViewController()
+            vc.dismissHandler = Deferred { () -> Just<String> in
+                print("Deferred 実行")
+                return Just("hello")
+            }
+            let cancellable = vc.dismissHandler?
+                .sink(receiveCompletion: {
+                    print("receiveCompletion \($0)")
+                }, receiveValue: {
+                    print("receiveValue \($0)")
+                })
+            self.navigationController?.pushViewController(vc, animated: true)
+        } else {
+            // Fallback on earlier versions
+        }
+        /*
+        vc.dismissHandler = {() -> Promise<Void> in
+            let promise = Promise<Void>
+            print("Test123")
+            
+            return promise
+        }()*/
+        
+    }
 }
 
 // MARK: - UICollectionViewDataSource
@@ -46,7 +75,7 @@ extension TasksViewController: UICollectionViewDataSource {
 
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         switch kind {
-        case UICollectionElementKindSectionHeader:
+        case UICollectionView.elementKindSectionHeader:
             let header = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: TasksViewController.headerIdentifier, for: indexPath)
             if let tasksDataSource = tasksDataSource,
                 let header = header as? TaskHeaderView {
